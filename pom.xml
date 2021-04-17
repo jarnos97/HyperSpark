@@ -25,7 +25,6 @@
 		<akka.group>com.typesafe.akka</akka.group>
 		<akka.version>2.3.4</akka.version> <!-- Previously 2.3.8 -->
 		<spark.version>1.4.1</spark.version>
-		<start-class>it.polimi.hyperh.apps.LocalApp</start-class>
 	</properties>
 
 	<repositories>
@@ -191,7 +190,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>  <!-- Changed from 1.5 -->
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -209,11 +208,11 @@
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>it.polimi.hyperh.apps.LocalApp</Main-Class>  <!-- State class to execute -->
+										<Main-Class>it.polimi.hyperh.apps.LocalApp</Main-Class>  <!-- Class to execute -->
 									</manifestEntries>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>reference.conf</resource>    <!-- Merge configuration files into reference.conf -->
+									<resource>reference.conf</resource>
 								</transformer>
 							</transformers>
 							<filters>
