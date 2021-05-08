@@ -1,28 +1,31 @@
 package nrp.util
 
-import scala.util.parsing.combinator.RegexParsers
-import nrp.problem.NrProblem
 import scala.io.Source
+import nrp.problem.NrProblem
+
 
 object NrProblemParser{
-  def apply(fileName: String): Array[Array[Int]] = {
+  def apply(fileName: String): NrProblem = {
     val path = "src/main/resources/"
     // Number of customers
-    val numCustomersFile = path + fileName + "numCustomers.txt"
-    val numCustomersString = Source.fromFile(numCustomersFile).mkString
+    val numCustFile = path + fileName + "NumCustomers.txt"
+    val numCustomersString = Source.fromFile(numCustFile).mkString
     val numCustomers = numCustomersString.toInt
     // Customer weights
-    val customerWeightsFile = path + fileName + "CustomerWeights.txt"
-    val customerWeightsCharacters = Source.fromFile(customerWeightsFile).getLines.toArray
+    val custWFile = path + fileName + "CustomerWeights.txt"
+    val customerWeightsCharacters = Source.fromFile(custWFile).getLines.toArray
     val customerWeights = customerWeightsCharacters.map(x => x.toDouble)
     // Customer requirements
-    val customerRequirementsFile = path + fileName + "CustomerRequirements.txt"
-    println(customerRequirementsFile)
-    val customerRequirements = Source.fromFile(customerRequirementsFile).getLines().map(_.split(",").map(_.trim.toInt).toArray).toArray
-//    val customerRequirementsCharacters = Source.fromFile(customerRequirementsFile).getLines.toArray
-//    val customerRequirements = customerRequirementsCharacters.map(x => x.toDouble)
+    val custRFile = path + fileName + "CustomerRequirements.txt"
+    val customerRequirements = Source.fromFile(custRFile).getLines().map(_.split(",").map(_.trim.toInt).toArray).toArray
     // Costs per node
+    val nodeCFile = path + fileName + "NodeCosts.txt"
+    val nodeCostsCharacter = Source.fromFile(nodeCFile).getLines().toArray
+    val nodeCosts = nodeCostsCharacter.map(x => x.toDouble)
     // Parents per node
-    return customerRequirements
+    val nodePFile = path + fileName + "NodeParents.txt"
+    val nodeParents = Source.fromFile(nodePFile).getLines().map(_.split(",").map(_.trim.toInt).toArray).toArray
+
+    new NrProblem(numCustomers, customerWeights, customerRequirements, nodeCosts, nodeParents)
   }
 }

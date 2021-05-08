@@ -12,12 +12,11 @@ import nrp.util.NrProblemParser
 
 @SerialVersionUID(100L)
 class NrProblem(val numCustomers: Int,
-                val customerWeights: Array[Double]){  //Array[Array[Int]]
-  // val nCustomers: Int
-  //  val customerWeights: Array[Float],
-  //  val customerRequirements: Array[Int],  //  Array[Array[Int]]
-  //  val nodeCosts: Array[Int],
-  //  val nodeParents: Array[Int]
+                val customerWeights: Array[Double],
+                val customerRequirements: Array[Array[Int]],
+                val nodeCosts: Array[Double],
+                val nodeParents: Array[Array[Int]]
+               ){
   // def evaluatePartialSolution(solution: NrSolution): EvaluatedSolution = {
   //   val results = new NrEvaluatedSolution()
   // }
@@ -27,6 +26,8 @@ class NrProblem(val numCustomers: Int,
 //    evaluatePartialSolution(solution)
 //  }
   println("Hello, World!")
+  println(numCustomers)
+  println(customerWeights.mkString("Array(", ", ", ")"))
 }
 
 //Problem Factory
@@ -38,7 +39,7 @@ object NrProblem {
   /**
    * @arg name - name of a resource in src/main/resources and src/test/resources
    */
-  def fromResources(fileName: String): Array[Array[Int]] =  {  //return type not necessary later (?)
+  def fromResources(fileName: String): NrProblem =  {  //return type not necessary later (?)
     NrProblemParser(fileName)
   }
 
