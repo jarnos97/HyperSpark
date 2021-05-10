@@ -1,46 +1,70 @@
 package nrp.problem
 
-import Array._
-import scala.io.Source
-import java.io.InputStream
+//import Array._
+//import scala.io.Source
+//import java.io.InputStream
 import it.polimi.hyperh.problem.Problem
-import it.polimi.hyperh.solution.{EvaluatedSolution, Solution}
-//import it.polimi.hyperh.solution.{EvaluatedSolution, Solution}
+//import it.polimi.hyperh.solution.EvaluatedSolution
+import it.polimi.hyperh.solution.Solution
 import it.polimi.hyperh.solution.EvaluatedSolution
-//import nrp.solution.{NrEvaluatedSolution, NrSolution}
+import nrp.solution.NrSolution
+import nrp.solution.NrEvaluatedSolution
 import nrp.util.NrProblemParser
 
 @SerialVersionUID(100L)
 class NrProblem(val numCustomers: Int,
+                val numLevels: Int,
                 val customerWeights: Array[Double],
                 val customerRequirements: Array[Array[Int]],
                 val nodeCosts: Array[Double],
                 val nodeParents: Array[Array[Int]]
-               ){
-  // def evaluatePartialSolution(solution: NrSolution): EvaluatedSolution = {
-  //   val results = new NrEvaluatedSolution()
-  // }
+               ) extends Problem {
 
-//  def evaluate(s: Solution): EvaluatedSolution = {
-//    val solution = s.asInstanceOf[NrSolution]
-//    evaluatePartialSolution(solution)
-//  }
-  println("Hello, World!")
-  println(numCustomers)
-  println(customerWeights.mkString("Array(", ", ", ")"))
+  def calculateWeights(customerIndices: List[Int]): Double = {customerIndices.map(customerWeights).sum}
+
+  def findParents(requirements: List[Int], numLevels: Int): List[Int] = {
+    var allRequirements: List[Int] = requirements
+    var requirementsArray = requirements.toArray
+    for (level <- 2 to numLevels){  // for each level extract the parents of the requirements.
+      val parents = requirementsArray.map(nodeParents).flatten.distinct
+      allRequirements = allRequirements:::parents.toList
+      requirementsArray = parents
+    }
+    allRequirements.distinct  // return unique items
+  }
+
+  def calculateCosts(customerIndices: List[Int]): Double = {
+    // Gather all customer requirements of solution. Flatten and take distinct elements for union of requirements.
+    val requirements = customerIndices.map(customerRequirements).flatten.distinct
+    // Find the all parents for the customer requirements
+    val allRequirements = findParents(requirements, numLevels)
+    val costs = allRequirements.toArray.map(nodeCosts).sum.toDouble
+    costs
+  }
+
+  def calculateFitness(s: List[Int]): Int = {
+    val customerIndices = s.zipWithIndex.filter(pair => pair._1 == 1).map(pair => pair._2)
+    val weightSum: Double = calculateWeights(customerIndices)
+    val costSum: Double = calculateCosts(customerIndices)
+    println(costSum)
+    val fitness = (weightSum - costSum).toInt
+    println(fitness)
+    fitness
+  }
+
+  def evaluate(s: Solution): EvaluatedSolution = {
+    val solution = s.asInstanceOf[NrSolution]
+    val fitness = calculateFitness(solution.toList)
+    val evaluatedSolution = new NrEvaluatedSolution(fitness, solution)
+    evaluatedSolution
+  }
 }
+
 
 //Problem Factory
 object NrProblem {
-  /**
-   * @arg path - path to a file
-   */
-//  def fromFile(path: String): NrProblem = NrProblemParser(Source.fromFile(path).getLines().mkString(" x ") + " x ").getOrElse(throw new RuntimeException("ParserError"))
-  /**
-   * @arg name - name of a resource in src/main/resources and src/test/resources
-   */
-  def fromResources(fileName: String): NrProblem =  {  //return type not necessary later (?)
+// arg name - name of a resource in src/main/resources and src/test/resources
+  def fromResources(fileName: String): NrProblem =  {
     NrProblemParser(fileName)
   }
-
 }

@@ -8,9 +8,11 @@ object NrProblemParser{
   def apply(fileName: String): NrProblem = {
     val path = "src/main/resources/"
     // Number of customers
-    val numCustFile = path + fileName + "NumCustomers.txt"
-    val numCustomersString = Source.fromFile(numCustFile).mkString
-    val numCustomers = numCustomersString.toInt
+    val parametersFile = path + fileName + "Parameters.txt"
+    val parametersString = Source.fromFile(parametersFile).getLines.toArray
+    val parameters = parametersString.map(x => x.toInt)
+    val numCustomers = parameters(0)
+    val numLevels = parameters(1)
     // Customer weights
     val custWFile = path + fileName + "CustomerWeights.txt"
     val customerWeightsCharacters = Source.fromFile(custWFile).getLines.toArray
@@ -26,6 +28,7 @@ object NrProblemParser{
     val nodePFile = path + fileName + "NodeParents.txt"
     val nodeParents = Source.fromFile(nodePFile).getLines().map(_.split(",").map(_.trim.toInt).toArray).toArray
 
-    new NrProblem(numCustomers, customerWeights, customerRequirements, nodeCosts, nodeParents)
+    // New problem instance
+    new NrProblem(numCustomers, numLevels, customerWeights, customerRequirements, nodeCosts, nodeParents)
   }
 }
