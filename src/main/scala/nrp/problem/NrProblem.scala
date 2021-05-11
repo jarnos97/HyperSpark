@@ -42,19 +42,20 @@ class NrProblem(val numCustomers: Int,
     costs
   }
 
-  def calculateFitness(s: List[Int]): Int = {
-    val customerIndices = s.zipWithIndex.filter(pair => pair._1 == 1).map(pair => pair._2)
+  def calculateFitness(s: NrSolution): Int = {
+    val solution = s.toList
+    val customerIndices = solution.zipWithIndex.filter(pair => pair._1 == 1).map(pair => pair._2)
     val weightSum: Double = calculateWeights(customerIndices)
     val costSum: Double = calculateCosts(customerIndices)
-    println(costSum)
+//    println(costSum)
     val fitness = (weightSum - costSum).toInt
-    println(fitness)
+//    println(fitness)
     fitness
   }
 
   def evaluate(s: Solution): EvaluatedSolution = {
     val solution = s.asInstanceOf[NrSolution]
-    val fitness = calculateFitness(solution.toList)
+    val fitness = calculateFitness(solution)
     val evaluatedSolution = new NrEvaluatedSolution(fitness, solution)
     evaluatedSolution
   }

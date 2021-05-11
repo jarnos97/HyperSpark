@@ -9,11 +9,6 @@ import java.lang.management.ThreadMXBean;
 abstract class StoppingCondition extends Serializable {
   def isSatisfied(): Boolean
   def isNotSatisfied(): Boolean = { ! isSatisfied() }
-
-  // Added additional versions to base class which accept parameters
-  def isSatisfiedParam(param: Double): Boolean
-//  def isNotSatisfiedParam: Boolean = { ! isSatisfiedParam()}
-
 }
 
 class TimeExpired(timeLimitMillis: Double) extends StoppingCondition {
@@ -37,8 +32,7 @@ class TimeExpired(timeLimitMillis: Double) extends StoppingCondition {
     else false
   }
 
-  // Empty override
-  override def isSatisfiedParam(param: Double): Boolean = {false}
-
   def getLimit(): Double = { timeLimitMillis }
 }
+
+
