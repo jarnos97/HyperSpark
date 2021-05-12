@@ -1,8 +1,6 @@
 package nrp.algorithms
 
-import scala.Ordering
 import it.polimi.hyperh.problem.Problem
-import it.polimi.hyperh.solution.Solution
 import it.polimi.hyperh.solution.EvaluatedSolution
 import it.polimi.hyperh.algorithms.Algorithm
 import it.polimi.hyperh.spark.StoppingCondition
@@ -15,29 +13,45 @@ import scala.annotation.tailrec
 import nrp.util.Moves
 import nrp.solution.NaiveNrEvaluatedSolution
 
-
-class SAAlgorithm(val initialTemperature: Double,
-                  val minTemperature: Double,
-                  val beta: Double,
-                  val bound: Double,
-                  val timeLimit: Int,
-                  val seedOption: Option[NrSolution]
-                 ) extends Algorithm {
+class SAAlgorithm() extends Algorithm {
+  // Define default values
+  var initialTemperature: Double = 200.00  // TODO: pick better default
+  var minTemperature: Double = 0.001  // TODO: pick better default
+  var beta: Double = 0.00000005  // TODO: pick better default
+  var bound: Double = 0.7 // TODO: pick better default
+  var timeLimit: Int = 100000 // TODO: pick better default
   /**
    * Secondary constructors
    */
-  def this(seedOption: Option[NrSolution])  {  // this sets default values
-    this(200.0, 0.05, 0.05, 370.0, 200000, seedOption)
+  def this(initT: Double, minT: Double, b: Double, boundB: Double, timeL: Int)  {
+    this()
+    initialTemperature = initT
+    minTemperature = minT
+    beta = b
+    bound = boundB
+    timeLimit = timeL
   }
-  def this () {  // this sets default values
-    this(200.0, 0.05, 0.05, 370.0, 200000, None)
+  def this(initT: Double, minT: Double, b: Double, boundB: Double, timeL: Int, seedOption: Option[NrSolution])  {
+    this()
+    initialTemperature = initT
+    minTemperature = minT
+    beta = b
+    bound = boundB
+    timeLimit = timeL
+    seed = seedOption
   }
 
-  seed = seedOption
+  def randomSolution(numCustomers: Int): List[Int]= {
+    val solution = Array.fill(numCustomers)(0)  // solution with only zeros
+    val randomIndices = Seq.fill(4)(Random.nextInt(100))  // can change random to Random
+    randomIndices.foreach(solution(_) = 1)
+    solution.toList
+  }
 
   def initialSolution(p: NrProblem): NrEvaluatedSolution = {
-    seed match {
+    seed match {  // if a seed is set, evaluate it. Otherwise create random initial solution.
       case Some(seedValue) => seedValue.evaluate(p).asInstanceOf[NrEvaluatedSolution]
+      case None => p.evaluate(NrSolution(randomSolution(p.numCustomers))).asInstanceOf[NrEvaluatedSolution]
     }
   }
 
@@ -89,7 +103,7 @@ class SAAlgorithm(val initialTemperature: Double,
           evOldSolution = old
         }
         var temperature = temp
-        println("Current temperature:" + temperature)
+//        println("Current temperature:" + temperature)
         // generate random new solution
         val newSolution = validMove(evOldSolution.solution.toList)
         // calculate fitness for new solution
@@ -97,16 +111,16 @@ class SAAlgorithm(val initialTemperature: Double,
 
         // calculate benefit from move
         val benefit = evNewSolution.value - evOldSolution.value
-        println("Benefit of new solution:" + benefit)
+//        println("Benefit of new solution:" + benefit)
         // calculate acceptance probability
         val ap = acceptanceProbability(benefit, temperature)
-        println("Acceptance probability new solution:" + ap)
+//        println("Acceptance probability new solution:" + ap)
         val randomNo = random.nextDouble()
         if ((benefit > 0) || (randomNo <= ap)) {
           evOldSolution = evNewSolution
-          println("Fitness of new accepted solution:" + evOldSolution.value)
+//          println("Fitness of new accepted solution:" + evOldSolution.value)
         }
-        temperature = 1  // update temperature
+        temperature = temperature / (1 + beta*temperature)  // update temperature
         loop(evOldSolution, temperature, iter+1)  //  start new iteration
       }
       else evOldSolution

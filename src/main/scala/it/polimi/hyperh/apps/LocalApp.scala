@@ -1,12 +1,10 @@
 package it.polimi.hyperh.apps
 
-import it.polimi.hyperh.problem.Problem
 import it.polimi.hyperh.spark.Framework
 import it.polimi.hyperh.spark.FrameworkConf
 import it.polimi.hyperh.spark.TimeExpired
 import pfsp.problem.PfsProblem
 import pfsp.algorithms.GAAlgorithm
-
 
 /**
  * @author Nemanja
