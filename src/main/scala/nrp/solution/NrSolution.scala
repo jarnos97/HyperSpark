@@ -24,9 +24,7 @@ class NrSolution (val solution: Array[Int]) extends Solution {
 
 
 object NrSolution{
-  def fromFile(fileName: String): NrSolution =  {  //return type not necessary later (?)
-    NrSolutionParser(fileName)}
-//  def fromFile(path:String) = NrSolutionParser.apply(Source.fromFile(path).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
+  def fromResources(fileName: String): NrSolution =  NrSolutionParser(fileName)
   def apply(solution: Array[Int]) = new NrSolution(solution)
   def apply(solution: List[Int]) = new NrSolution(solution.toArray)  // why this second part?
 }

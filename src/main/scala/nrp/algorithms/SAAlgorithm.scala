@@ -1,5 +1,6 @@
 package nrp.algorithms
 
+import scala.Ordering
 import it.polimi.hyperh.problem.Problem
 import it.polimi.hyperh.solution.Solution
 import it.polimi.hyperh.solution.EvaluatedSolution
@@ -12,13 +13,33 @@ import nrp.solution.NrEvaluatedSolution
 import scala.util.Random
 import scala.annotation.tailrec
 import nrp.util.Moves
+import nrp.solution.NaiveNrEvaluatedSolution
 
 
-class SAAlgorithm(p: NrProblem, initialTemp: Double, timeLimit: Int, beta: Double,
-                  minTemperature: Double, seed: NrSolution, bound: Double) extends Algorithm {
-  // Set variables
-  var t: Double = initialTemp  // set temperature t to initial temperature
-  val initialSolution: List[Int] = seed.toList
+class SAAlgorithm(val initialTemperature: Double,
+                  val minTemperature: Double,
+                  val beta: Double,
+                  val bound: Double,
+                  val timeLimit: Int,
+                  val seedOption: Option[NrSolution]
+                 ) extends Algorithm {
+  /**
+   * Secondary constructors
+   */
+  def this(seedOption: Option[NrSolution])  {  // this sets default values
+    this(200.0, 0.05, 0.05, 370.0, 200000, seedOption)
+  }
+  def this () {  // this sets default values
+    this(200.0, 0.05, 0.05, 370.0, 200000, None)
+  }
+
+  seed = seedOption
+
+  def initialSolution(p: NrProblem): NrEvaluatedSolution = {
+    seed match {
+      case Some(seedValue) => seedValue.evaluate(p).asInstanceOf[NrEvaluatedSolution]
+    }
+  }
 
   override def evaluate(problem: Problem): EvaluatedSolution = {
     val p = problem.asInstanceOf[NrProblem]
@@ -26,7 +47,6 @@ class SAAlgorithm(p: NrProblem, initialTemp: Double, timeLimit: Int, beta: Doubl
     evaluate(p, stopCond)
   }
 
-//  override def evaluate(problem: Problem, stopCond: StoppingCondition): EvaluatedSolution = {
   override def evaluate(problem: Problem, stopCond: StoppingCondition): EvaluatedSolution = {
     val random = new Random
     val p = problem.asInstanceOf[NrProblem]
@@ -56,16 +76,42 @@ class SAAlgorithm(p: NrProblem, initialTemp: Double, timeLimit: Int, beta: Doubl
 
     def acceptanceProbability(benefit: Double, temperature: Double): Double = scala.math.exp(benefit/temperature)
 
+    var evOldSolution = NaiveNrEvaluatedSolution(p)  // purely because it has to be an instance of NrEvaluatedSolution
     val stop = stopCond.asInstanceOf[TimeExpired].initialiseLimit()
+
+    @tailrec
     def loop(old: NrEvaluatedSolution, temp: Double, iter: Int): NrEvaluatedSolution = {
       if ((temp > minTemperature)  && stop.isNotSatisfied()) {
-        println("Do the things")
-      }
-    println("Test")
-    }
+        if (iter == 1){
+          // initialize solution
+          evOldSolution = initialSolution(p)
+        } else {
+          evOldSolution = old
+        }
+        var temperature = temp
+        println("Current temperature:" + temperature)
+        // generate random new solution
+        val newSolution = validMove(evOldSolution.solution.toList)
+        // calculate fitness for new solution
+        val evNewSolution = fitness(newSolution)
 
-    // This is just to return the right type for now
-    validMove(initialSolution)
-    fitness(initialSolution)
+        // calculate benefit from move
+        val benefit = evNewSolution.value - evOldSolution.value
+        println("Benefit of new solution:" + benefit)
+        // calculate acceptance probability
+        val ap = acceptanceProbability(benefit, temperature)
+        println("Acceptance probability new solution:" + ap)
+        val randomNo = random.nextDouble()
+        if ((benefit > 0) || (randomNo <= ap)) {
+          evOldSolution = evNewSolution
+          println("Fitness of new accepted solution:" + evOldSolution.value)
+        }
+        temperature = 1  // update temperature
+        loop(evOldSolution, temperature, iter+1)  //  start new iteration
+      }
+      else evOldSolution
+    }
+    loop(evOldSolution, initialTemperature, iter = 1)
   }
+
 }

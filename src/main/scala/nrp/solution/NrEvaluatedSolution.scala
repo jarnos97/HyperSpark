@@ -2,11 +2,9 @@ package nrp.solution
 
 import it.polimi.hyperh.solution.EvaluatedSolution
 import nrp.problem.NrProblem
-import nrp.solution.NrSolution
-
+import nrp.util.NrEvaluatedSolutionParser
 import scala.io.Source
 import java.io.InputStream
-
 
 class NrEvaluatedSolution(override val value: Int, override val solution: NrSolution) extends EvaluatedSolution(value, solution){
   //Alternative constructor
@@ -22,24 +20,17 @@ class NrEvaluatedSolution(override val value: Int, override val solution: NrSolu
 }
 
 object NrEvaluatedSolution{
-  //  def fromFile(path:String) = NrSolutionParser.apply(Source.fromFile(path).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
+//  def fromResources(valueFileName: String, solutionFileName: String): NrEvaluatedSolution =  NrEvaluatedSolutionParser(valueFileName, solutionFileName)
+
+  def fromResources(name: String) = {
+    val stream: InputStream = getClass.getResourceAsStream("/" + name)
+    NrEvaluatedSolutionParser(Source.fromInputStream(stream).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
+  }
+
   def apply(value: Int, solution: Array[Int]) = new NrEvaluatedSolution(value, solution)
   def apply(value: Int, solution: List[Int]) = new NrEvaluatedSolution(value, solution.toArray)  // why this second part?
 }
 
-//object PfsEvaluatedSolution {
-//  /**
-//   * @arg path - name of a file
-//   */
-////  def fromFile(path: String) = PfsEvaluatedSolutionParser.apply(Source.fromFile(path).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
-//  /**
-//   * @arg name - name of a resource in src/main/resources and src/test/resources
-//   */
-////  def fromResources(name: String) = {
-////    val stream: InputStream = getClass.getResourceAsStream("/" + name)
-////    PfsEvaluatedSolutionParser(Source.fromInputStream(stream).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
-////  }
-//}
-//object NaivePfsEvaluatedSolution {
-//  def apply(problem: NrProblem) = new NrEvaluatedSolution(999999999, problem.jobs)
-//}
+object NaiveNrEvaluatedSolution {
+  def apply(problem: NrProblem) = new NrEvaluatedSolution(value = 1, List.fill(problem.numCustomers)(0).asInstanceOf[NrSolution])
+}
