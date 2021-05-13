@@ -15,11 +15,10 @@ import scala.language.postfixOps
 object LocalAppNRP {
   def main(args: Array[String]): Unit = {
     val problem =  NrProblem.fromResources(fileName = "NRP1")
-//    val initialSolution = NrEvaluatedSolution.fromResources(name = "NRP1InitialSolutionEvaluated.txt")
-    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000005, boundB = 0.3, timeL = 200000)
+    val algo = () => new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000005, boundB = 370.0)
     val numOfAlgorithms = 4
-    val stopCond = new TimeExpired(200000)
-    val randomSeed = 1255846
+    val stopCond = new TimeExpired(900000)  // 15 minutes
+    val randomSeed = 118337975
 
     val conf = new FrameworkConf()
       .setRandomSeed(randomSeed)
@@ -27,8 +26,7 @@ object LocalAppNRP {
       .setProblem(problem)
       .setNAlgorithms(algo, numOfAlgorithms)
       .setNDefaultInitialSeeds(numOfAlgorithms)  // no initial seed
-      .setNDefaultInitialSeeds(numOfAlgorithms)
-      .setNumberOfIterations(1)
+      .setNumberOfIterations(1)  // what does this do?
       .setStoppingCondition(stopCond)
 
     val solution = Framework.run(conf)

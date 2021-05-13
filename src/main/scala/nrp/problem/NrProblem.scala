@@ -16,7 +16,7 @@ class NrProblem(val numCustomers: Int,
                 val nodeParents: Array[Array[Int]]
                ) extends Problem {
 
-  val initialSolution: Array[Int] = (1 to numCustomers).toArray
+  val initialSolution: Array[Int] = Array.fill(numCustomers)(0)
 
   def calculateWeights(customerIndices: List[Int]): Double = {customerIndices.map(customerWeights).sum}
 
@@ -36,8 +36,7 @@ class NrProblem(val numCustomers: Int,
     val requirements = customerIndices.map(customerRequirements).flatten.distinct
     // Find the all parents for the customer requirements
     val allRequirements = findParents(requirements, numLevels)
-    val costs = allRequirements.toArray.map(nodeCosts).sum
-    costs
+    allRequirements.toArray.map(nodeCosts).sum
   }
 
   def calculateFitness(s: NrSolution): Int = {
