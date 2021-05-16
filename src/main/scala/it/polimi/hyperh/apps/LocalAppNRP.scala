@@ -5,8 +5,8 @@ import it.polimi.hyperh.spark.FrameworkConf
 import it.polimi.hyperh.spark.TimeExpired
 import nrp.problem.NrProblem
 import nrp.algorithms.SAAlgorithm
-
 import scala.language.postfixOps
+import java.io._
 
 
 /**
@@ -14,10 +14,14 @@ import scala.language.postfixOps
  */
 object LocalAppNRP {
   def main(args: Array[String]): Unit = {
+    // start timer
+    val t1 = System.nanoTime
+
     val problem =  NrProblem.fromResources(fileName = "NRP1")
-    val algo = () => new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000005, boundB = 370.0)
+    val algo = () => new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000005, totalCosts = 820,
+      boundPercentage = 0.3)
     val numOfAlgorithms = 4
-    val stopCond = new TimeExpired(900000)  // 15 minutes
+    val stopCond = new TimeExpired(1200000)  //  300000 5 minutes
     val randomSeed = 118337975
 
     val conf = new FrameworkConf()
@@ -30,7 +34,21 @@ object LocalAppNRP {
       .setStoppingCondition(stopCond)
 
     val solution = Framework.run(conf)
+
+    // Write solutions to file
+    val fw = new FileWriter("src/main/resources/bestFoundSolutionsNRP.txt.", true)
+    try {
+      fw.write("NRP1 bound=0.3  b=0.0000005 ")
+      fw.write(solution.toString + "\n")
+    }
+    finally fw.close()
+
+    // stop timer
+    val duration = (System.nanoTime - t1) / 1e9d
+
+    // Print solution to console
     println(solution)
+    println(duration)
   }
 }
 

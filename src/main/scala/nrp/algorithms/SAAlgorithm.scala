@@ -15,30 +15,34 @@ import nrp.solution.NaiveNrEvaluatedSolution
 
 class SAAlgorithm() extends Algorithm {
   // Define default values
-  var initialTemperature: Double = 200.00  // TODO: pick better default
-  var minTemperature: Double = 0.001  // TODO: pick better default
-  var beta: Double = 0.00000005  // TODO: pick better default
-  var bound: Double = 0.7 // TODO: pick better default
-  val defaultTimeLimit = 60000 // = 1 minute
+  var initialTemperature: Double = 100.0
+  var minTemperature: Double = 0.001
+  var beta: Double = 0.00000005
+  var totalCosts = 1000
+  var boundP: Double = 0.3
+  var bound: Double = (totalCosts * boundP).round
+  val defaultTimeLimit = 300000 // 5 minutes
   /**
    * Secondary constructors
    */
-  def this(initT: Double, minT: Double, b: Double, boundB: Double)  {
+  def this(initT: Double, minT: Double, b: Double, totalCosts: Double, boundPercentage: Double)  {
     this()
     initialTemperature = initT
     minTemperature = minT
     beta = b
-    bound = boundB
+    boundP = boundPercentage
+    bound = (totalCosts * boundPercentage).round
   }
-  def this(initT: Double, minT: Double, b: Double, boundB: Double, seedOption: Option[NrSolution])  {
+  def this(initT: Double, minT: Double, b: Double, totalCosts: Double, boundPercentage: Double,
+           seedOption: Option[NrSolution])  {
     this()
     initialTemperature = initT
     minTemperature = minT
     beta = b
-    bound = boundB
+    boundP = boundPercentage
+    bound = (totalCosts * boundPercentage).round
     seed = seedOption
   }
-
   def this(seedOption: Option[NrSolution]) {
     this()
     seed = seedOption
@@ -46,7 +50,8 @@ class SAAlgorithm() extends Algorithm {
 
   def randomSolution(numCustomers: Int): List[Int]= {
     val solution = Array.fill(numCustomers)(0)  // solution with only zeros
-    val randomIndices = Seq.fill(4)(Random.nextInt(100))  // can change random to Random  TODO: why four? Calculate and perhaps increase. Scale with the amount of customers!
+    val numInitialCustomers: Int = (0.1 * numCustomers * boundP).round.toInt // TODO: this the best percentage?
+    val randomIndices = Seq.fill(numInitialCustomers)(Random.nextInt(100))
     randomIndices.foreach(solution(_) = 1)
     solution.toList
   }
@@ -87,14 +92,14 @@ class SAAlgorithm() extends Algorithm {
       var newSolution = List[Int]()  // empty list
       var functionInt = 9999999
       val customerIndices = solution.zipWithIndex.filter(pair => pair._1 == 1).map(pair => pair._2)  // how many customers are selected?
-      if (customerIndices.length < 1){  // if there are no customers in the current solution, removing one should not be an option
-        functionInt = Random.nextInt(List(1, 2, 3, 4).length)  // produces random number 0, 1, 2, or 3
+      if (customerIndices.length < 1){  // if there are no customers in the current solution, always add a customer
+        newSolution = Moves(random).addCustomer(solution)
       } else {
         functionInt = Random.nextInt(List(1, 2, 3, 4, 5).length)  // produces random number 0, 1, 2, 3, or 4
+        if ((functionInt == 0) || (functionInt == 1)) newSolution = Moves(random).addCustomer(solution) // add and swap are more likely than remove
+        if ((functionInt == 2) || (functionInt == 3)) newSolution = Moves(random).swapCustomers(solution)
+        if (functionInt == 4) newSolution = Moves(random).removeCustomer(solution)
       }
-      if ((functionInt == 0) || (functionInt == 1)) newSolution = Moves(random).addCustomer(solution) // add and swap are more likely than remove
-      if ((functionInt == 2) || (functionInt == 3)) newSolution = Moves(random).swapCustomers(solution)
-      if (functionInt == 4) newSolution = Moves(random).removeCustomer(solution)
       // Check new solution
       if (checkConstraint(newSolution)) {
         newSolution // return the new solution
@@ -130,7 +135,10 @@ class SAAlgorithm() extends Algorithm {
         }
         temperature = temperature / (1 + beta*temperature)  // update temperature
         loop(evOldSolution, temperature, iter+1)  //  start new iteration
-      } else evOldSolution
+      } else {
+        println(temp)
+        evOldSolution
+      }
     }
     loop(evOldSolution, initialTemperature, iter = 1)
   }
