@@ -6,6 +6,7 @@ import it.polimi.hyperh.solution.EvaluatedSolution
 import nrp.solution.NrSolution
 import nrp.solution.NrEvaluatedSolution
 import nrp.util.NrProblemParser
+import nrp.util.AlternativeNrProblemParser  // todo: remove
 
 @SerialVersionUID(100L)
 class NrProblem(val numCustomers: Int,
@@ -61,5 +62,9 @@ object NrProblem {
 // arg name - name of a resource in src/main/resources and src/test/resources
   def fromResources(fileName: String): NrProblem =  {
     NrProblemParser(fileName)
+  }
+
+  def fromAlternativeResource(fileName: String): NrProblem = {
+    AlternativeNrProblemParser(fileName)  // todo: remove
   }
 }
