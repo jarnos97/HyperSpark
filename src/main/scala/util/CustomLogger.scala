@@ -1,6 +1,6 @@
 package util
 
-import org.apache.spark.Logging
+import org.apache.spark.internal.Logging  // changed from: org.apache.spark.Logging TODO: will this break it?
 /**
  * @author Nemanja
  */

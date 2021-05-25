@@ -18,7 +18,7 @@ object LocalAppNRP {
 //    val t1 = System.nanoTime
 
     val problem =  NrProblem.fromResources(fileName = "NRP1")
-    val algo = () => new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000005, totalCosts = 820,
+    val algo = () => new SAAlgorithm(initT = 100.0, minT = 0.01, b = 0.0000005, totalCosts = 820,
       boundPercentage = 0.3)
     val numOfAlgorithms = 4
     val stopCond = new TimeExpired(300000)  //  300000 5 minutes
