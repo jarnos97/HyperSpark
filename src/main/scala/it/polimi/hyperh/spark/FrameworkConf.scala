@@ -150,6 +150,9 @@ class FrameworkConf() {
       this
     }
   }
-  def setMapReduceHandler(h: MapReduceHandler) = { handler = h }
+  def setMapReduceHandler(h: MapReduceHandler) = {
+    handler = h
+    this  // todo: added this. Keep? Working?
+  }
   def getMapReduceHandler(): MapReduceHandler = handler
 }

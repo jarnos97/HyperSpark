@@ -14,3 +14,9 @@ class MapReduceHandler {
     List(sol1, sol2).min
   }
 }
+
+class MapReduceHandlerMaximization extends MapReduceHandler{
+  override def hyperReduce(sol1: EvaluatedSolution, sol2: EvaluatedSolution): EvaluatedSolution = {
+    List(sol1, sol2).max
+  }
+}
