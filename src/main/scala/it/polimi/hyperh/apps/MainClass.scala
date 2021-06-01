@@ -11,20 +11,20 @@ import it.polimi.hyperh.spark.MapReduceHandlerMaximization
 object MainClass {
   def main(args: Array[String]): Unit = {
     val problem =  NrProblem.fromResources(fileName = "NRP1")
-    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000001, totalCosts = 820, boundPercentage = 0.3)
+    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.00000001, totalCosts = 820, boundPercentage = 0.7)
     val numOfAlgorithms = 64
-    val stopCond = new TimeExpired(30000)  //  300000 = 5 minutes
+    val stopCond = new TimeExpired(60000)  //  300000 = 5 minutes
     val randomSeed = 118337975
 
     val conf = new FrameworkConf()
-      .setRandomSeed(randomSeed)
       .setProblem(problem)
-      .setNAlgorithms(algo, numOfAlgorithms)
-      .setNDefaultInitialSeeds(numOfAlgorithms)  // no initial seed
-      .setMapReduceHandler(new MapReduceHandlerMaximization())
+      .setRandomSeed(randomSeed)
       .setNumberOfIterations(10)
       .setStoppingCondition(stopCond)
       .setSeedingStrategy(new SameSeeds())
+      .setNAlgorithms(algo, numOfAlgorithms)
+      .setNDefaultInitialSeeds(numOfAlgorithms)  // no initial seed
+      .setMapReduceHandler(new MapReduceHandlerMaximization())
 
     val solution = Framework.run(conf)
     println(solution)

@@ -135,10 +135,7 @@ class SAAlgorithm() extends Algorithm {
         }
         temperature = temperature / (1 + beta*temperature)  // update temperature
         loop(evOldSolution, temperature, iter+1)  //  start new iteration
-      } else {
-        println(temp)
-        evOldSolution
-      }
+      } else evOldSolution
     }
     loop(evOldSolution, initialTemperature, iter = 1)
   }

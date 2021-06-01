@@ -83,7 +83,9 @@ object Framework {
   def hyperLoop(problem: Problem, rdd: RDD[DistributedDatum], maxIter: Int, runNo: Int):EvaluatedSolution = {
 
     var bestSolution: EvaluatedSolution = null
-    
+
+    var iterationSolutions: Array[AnyVal] = Array()  // todo: added this. Keep?
+
     def iterloop(rdd: RDD[DistributedDatum], iterationNo: Int): EvaluatedSolution = {
       val bestIterSolution = rdd
       .map(datum => mrHandler.hyperMap(problem, datum, runNo))
@@ -91,9 +93,13 @@ object Framework {
       
       if(iterationNo == 1)  bestSolution = bestIterSolution
       else bestSolution = mrHandler.hyperReduce(bestIterSolution, bestSolution)
-      
-      if(iterationNo == maxIter)//if it is last iteration don't update the rdd
-        bestSolution          //return best solution found
+
+      iterationSolutions :+= bestSolution.value  // todo: added this. Keep?
+
+      if(iterationNo == maxIter) {//if it is last iteration don't update the rdd
+        println(iterationSolutions.mkString("Array(", ", ", ")"))  // todo: added this. Keep?
+        bestSolution
+      } //return best solution found
       else {
         val updatedRDD = updateRDD(rdd, bestSolution)
         iterloop(updatedRDD, iterationNo+1)
