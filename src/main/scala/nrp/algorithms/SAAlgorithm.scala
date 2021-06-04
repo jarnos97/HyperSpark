@@ -3,15 +3,13 @@ package nrp.algorithms
 import it.polimi.hyperh.problem.Problem
 import it.polimi.hyperh.solution.EvaluatedSolution
 import it.polimi.hyperh.algorithms.Algorithm
-import it.polimi.hyperh.spark.StoppingCondition
-import it.polimi.hyperh.spark.TimeExpired
+import it.polimi.hyperh.spark.{StoppingCondition, TimeExpired}
 import nrp.problem.NrProblem
-import nrp.solution.NrSolution
-import nrp.solution.NrEvaluatedSolution
+import nrp.solution.{NrSolution, NrEvaluatedSolution, NaiveNrEvaluatedSolution}
 import scala.util.Random
 import scala.annotation.tailrec
 import nrp.util.Moves
-import nrp.solution.NaiveNrEvaluatedSolution
+
 
 class SAAlgorithm() extends Algorithm {
   // Define default values
@@ -21,10 +19,8 @@ class SAAlgorithm() extends Algorithm {
   var totalCosts = 1000
   var boundP: Double = 0.3
   var bound: Double = (totalCosts * boundP).round
-  val defaultTimeLimit = 300000 // 5 minutes
-  /**
-   * Secondary constructors
-   */
+  val defaultTimeLimit: Int = 300000 // 5 minutes
+  // Secondary constructors
   def this(initT: Double, minT: Double, b: Double, totalCosts: Double, boundPercentage: Double)  {
     this()
     initialTemperature = initT
@@ -51,7 +47,7 @@ class SAAlgorithm() extends Algorithm {
   def randomSolution(numCustomers: Int): List[Int]= {
     val solution = Array.fill(numCustomers)(0)  // solution with only zeros
     val numInitialCustomers: Int = (0.1 * numCustomers * boundP).round.toInt // TODO: this the best percentage?
-    val randomIndices = Seq.fill(numInitialCustomers)(Random.nextInt(100))
+    val randomIndices = Seq.fill(numInitialCustomers)(Random.nextInt(numCustomers))  // TODO: Changed this! from static 100.
     randomIndices.foreach(solution(_) = 1)
     solution.toList
   }
@@ -117,9 +113,7 @@ class SAAlgorithm() extends Algorithm {
         if (iter == 1){
           // initialize solution
           evOldSolution = initialSolution(p)
-        } else {
-          evOldSolution = old
-        }
+        } else evOldSolution = old
         var temperature = temp
         // generate random new solution
         val newSolution = validMove(evOldSolution.solution.toList)

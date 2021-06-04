@@ -6,7 +6,8 @@ import nrp.util.NrEvaluatedSolutionParser
 import scala.io.Source
 import java.io.InputStream
 
-class NrEvaluatedSolution(override val value: Int, override val solution: NrSolution) extends EvaluatedSolution(value, solution){
+class NrEvaluatedSolution(override val value: Int, override val solution: NrSolution)
+  extends EvaluatedSolution(value, solution){
   //Alternative constructor
   def this(value: Int, s: Array[Int]) = this(value, NrSolution(s))
   override def toString: String = {
@@ -25,7 +26,7 @@ object NrEvaluatedSolution{
     NrEvaluatedSolutionParser(Source.fromInputStream(stream).getLines().mkString).getOrElse(throw new RuntimeException("ParserError"))
   }
   def apply(value: Int, solution: Array[Int]) = new NrEvaluatedSolution(value, solution)
-  def apply(value: Int, solution: List[Int]) = new NrEvaluatedSolution(value, solution.toArray)  // why this second part?
+  def apply(value: Int, solution: List[Int]) = new NrEvaluatedSolution(value, solution.toArray)
 }
 
 object NaiveNrEvaluatedSolution {

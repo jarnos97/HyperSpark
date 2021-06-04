@@ -10,10 +10,10 @@ import it.polimi.hyperh.spark.MapReduceHandlerMaximization
  */
 object MainClass {
   def main(args: Array[String]): Unit = {
-    val problem =  NrProblem.fromResources(fileName = "NRP1")
-    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.00000001, totalCosts = 820, boundPercentage = 0.7)
+    val problem =  NrProblem.fromResources(fileName = "NRP4")
+    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000001, totalCosts = 16235, boundPercentage = 0.3)
     val numOfAlgorithms = 64
-    val stopCond = new TimeExpired(60000)  //  300000 = 5 minutes
+    val stopCond = new TimeExpired(180000)  //  300000 = 5 minutes
     val randomSeed = 118337975
 
     val conf = new FrameworkConf()

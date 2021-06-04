@@ -1,7 +1,6 @@
 package nrp.solution
 
 import it.polimi.hyperh.solution.Solution
-import scala.io.Source
 import nrp.util.NrSolutionParser
 
 
@@ -9,24 +8,20 @@ import nrp.util.NrSolutionParser
  * A solution is represented as a set of customers, whose requirements are fulfilled.
  * s = [0, 1, 0, 0, 1, 0, 1, 0, 1]
  */
-class NrSolution (val solution: Array[Int]) extends Solution {
-  // representation should be an array of booleans. For each customer.
-  // 1 if their requirements are met, 0 otherwise
-
-  def asString() = "Array(" + solution.mkString(", ")+")"
-  override def toString = {
+class NrSolution(val solution: Array[Int]) extends Solution {
+  def asString(): String = "Array(" + solution.mkString(", ")+")"
+  override def toString: String = {
     val requirementsString = asString()
     val str = "NrSolution(Customer requirements fulfilled:" + requirementsString+")"
     str
   }
-  def toList = solution.toList
+  def toList: List[Int] = solution.toList
 }
-
 
 object NrSolution{
   def fromResources(fileName: String): NrSolution =  NrSolutionParser(fileName)
   def apply(solution: Array[Int]) = new NrSolution(solution)
-  def apply(solution: List[Int]) = new NrSolution(solution.toArray)  // why this second part?
+  def apply(solution: List[Int]) = new NrSolution(solution.toArray)
 }
 
 
