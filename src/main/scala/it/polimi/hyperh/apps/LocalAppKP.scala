@@ -15,8 +15,8 @@ object LocalAppKP{
     val t1 = System.nanoTime
 
     val problem = KpProblem.fromResources(fileName = "KP_500_100000")
-    val algo = new SAAlgorithm(p = problem, initialTemperature = 100.0, minTemperature = 0.01, beta = 0.0000005,
-      seedOption = None)  // TODO: none good here?
+    println(problem)
+    val algo = new SAAlgorithm(initT= 100.0, minT = 0.01, b = 0.0000005)
     val numOfAlgorithms = 4
     val stopCond = new TimeExpired(60000)
     val randomSeed = 118337975
@@ -28,7 +28,7 @@ object LocalAppKP{
       .setNAlgorithms(algo, numOfAlgorithms)
       .setNDefaultInitialSeeds(numOfAlgorithms)
       .setSeedingStrategy(new SameSeeds())
-      .setNumberOfIterations(10)
+      .setNumberOfIterations(5)
       .setMapReduceHandler(new MapReduceHandlerMaximization())
       .setStoppingCondition(stopCond)
 
@@ -48,5 +48,5 @@ object LocalAppKP{
     // Print solution to console
     println(solution)
     println("Total execution time:" + duration)
-  } // TODO: INFINITE LOOP!!
+  }
 }

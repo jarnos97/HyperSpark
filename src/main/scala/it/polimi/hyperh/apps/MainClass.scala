@@ -1,19 +1,21 @@
 package it.polimi.hyperh.apps
 
 import it.polimi.hyperh.spark.{Framework, FrameworkConf, SameSeeds, TimeExpired}
-import nrp.problem.NrProblem
-import nrp.algorithms.SAAlgorithm
+import kp.problem.KpProblem
 import it.polimi.hyperh.spark.MapReduceHandlerMaximization
+import kp.algorithms.SAAlgorithm
+import java.io._
+
 
 /**
  * @author Jarno
  */
 object MainClass {
   def main(args: Array[String]): Unit = {
-    val problem =  NrProblem.fromResources(fileName = "NRP4")
-    val algo = new SAAlgorithm(initT = 100.0, minT = 0.001, b = 0.0000001, totalCosts = 16235, boundPercentage = 0.3)
+    val problem = KpProblem.fromResources(fileName = "KP_500_100000")
+    val algo = new SAAlgorithm(initT = 100.0, minT = 0.01, b = 0.0000005)
     val numOfAlgorithms = 64
-    val stopCond = new TimeExpired(180000)  //  300000 = 5 minutes
+    val stopCond = new TimeExpired(120000)  //  300000 = 5 minutes
     val randomSeed = 118337975
 
     val conf = new FrameworkConf()

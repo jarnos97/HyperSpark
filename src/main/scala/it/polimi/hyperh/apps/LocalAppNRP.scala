@@ -26,8 +26,8 @@ object LocalAppNRP {
       .setProblem(problem)
       .setNAlgorithms(algo, numOfAlgorithms)
       .setNDefaultInitialSeeds(numOfAlgorithms)  // no initial seed
-      .setSeedingStrategy(new SameSeeds())
-      .setNumberOfIterations(10)  // what does this do? --> Cooperation
+//      .setSeedingStrategy(new SameSeeds())
+      .setNumberOfIterations(1)  // what does this do? --> Cooperation
       .setMapReduceHandler(new MapReduceHandlerMaximization())  // for maximization!
       .setStoppingCondition(stopCond)
 

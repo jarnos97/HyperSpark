@@ -6,41 +6,47 @@ import it.polimi.hyperh.algorithms.Algorithm
 import it.polimi.hyperh.spark.{StoppingCondition, TimeExpired}
 import kp.problem.KpProblem
 import kp.solution.{KpEvaluatedSolution, KpSolution, NaiveKpEvaluatedSolution}
-
 import scala.util.Random
 import scala.annotation.tailrec
 import kp.util.Moves
 
-class SAAlgorithm(p: KpProblem,
-                  initialTemperature: Double,
-                  minTemperature: Double,
-                  beta: Double,
-                  seedOption: Option[KpSolution]
-                 ) extends Algorithm {
+class SAAlgorithm() extends Algorithm {
   // Define default values
+  var initialTemperature: Double = 100.0
+  var minTemperature: Double = 0.001
+  var beta: Double = 0.00000005
   val defaultTimeLimit: Int = 300000
   // Secondary constructors
-  def this(p: KpProblem, seedOption: Option[KpSolution]) {
-    this(p, 100.0, 0.001, 0.00000005, seedOption)
+  def this(initT: Double, minT: Double, b: Double)  {
+    this()
+    initialTemperature = initT
+    minTemperature = minT
+    beta = b
   }
-  def this(p: KpProblem) {
-    this(p, 100.0, 0.001, 0.00000005, None)
+  def this(initT: Double, minT: Double, b: Double, seedOption: Option[KpSolution])  {
+    this()
+    initialTemperature = initT
+    minTemperature = minT
+    beta = b
+    seed = seedOption
   }
-  seed = seedOption
+  def this(seedOption: Option[KpSolution]) {
+    this()
+    seed = seedOption
+  }
 
-  def randomSolution: List[Int] = {
-    val numItems = p.weights.length
+  def randomSolution(numItems: Int): List[Int] = {
     val solution = Array.fill(numItems)(0)  // solution with only zeros
-    val numInitialItems: Int = (0.1 * numItems).round.toInt  // TODO: explain choice
-    val randomIndices = Seq.fill(numInitialItems)(Random.nextInt(numItems))
-    randomIndices.foreach(solution(_) = 1)
+    val randomIndices = Seq.fill(1)(Random.nextInt(numItems))  // initial solution has only one item, as the coefficients can vary greatly
+    randomIndices.foreach(solution(_) = 1)  // todo: Changed above to length 1 - document!
+//    val result = solution.toList
     solution.toList
   }
 
-  def initialSolution: KpEvaluatedSolution = {
+  def initialSolution(p: KpProblem): KpEvaluatedSolution = {
     seed match {  // if a seed is set, evaluate it. Otherwise create random initial solution.
       case Some(seedValue) => seedValue.evaluate(p).asInstanceOf[KpEvaluatedSolution]
-      case None => p.evaluate(KpSolution(randomSolution)).asInstanceOf[KpEvaluatedSolution]
+      case None => p.evaluate(KpSolution(randomSolution(p.weights.length))).asInstanceOf[KpEvaluatedSolution]
     }
   }
 
@@ -51,7 +57,7 @@ class SAAlgorithm(p: KpProblem,
   }
 
   override def evaluate(problem: Problem, stopCond: StoppingCondition): EvaluatedSolution = {
-    val random = new Random()
+    val random = new Random
     val p = problem.asInstanceOf[KpProblem]
 
     def weights(solution: List[Int]): Int = {
@@ -62,6 +68,8 @@ class SAAlgorithm(p: KpProblem,
     def fitness(solution: List[Int]): KpEvaluatedSolution = p.evaluate(KpSolution(solution)).asInstanceOf[KpEvaluatedSolution]
 
     def checkConstraint(solution: List[Int]): Boolean = {
+//      val w: Int = weights(solution)
+//      val c: Int = p.capacity
       if (weights(solution) <= p.capacity) {
         true
       } else false
@@ -76,10 +84,10 @@ class SAAlgorithm(p: KpProblem,
       if (itemIndices.length < 1){  // if there are no item in the current solution, always add an item
         newSolution = Moves(random).addItem(solution)
       } else {
-        functionInt = Random.nextInt(List(1, 2, 3, 4, 5).length)  // produces random number 0, 1, 2, 3, or 4
-        if ((functionInt == 0) || (functionInt == 1)) newSolution = Moves(random).addItem(solution) // add and swap are more likely than remove
-        if ((functionInt == 2) || (functionInt == 3)) newSolution = Moves(random).swapItems(solution)
-        if (functionInt == 4) newSolution = Moves(random).removeItem(solution)
+        functionInt = Random.nextInt(List(1, 2, 3).length)  // produces random number 0, 1, or 2
+        if (functionInt == 0) newSolution = Moves(random).addItem(solution) // all moves are equally likely to be chosen
+        if (functionInt == 1) newSolution = Moves(random).swapItems(solution)
+        if (functionInt == 2) newSolution = Moves(random).removeItem(solution)  // TODO: made the probabilities equal here
       }
       // Check new solution
       if (checkConstraint(newSolution)) {
@@ -97,7 +105,7 @@ class SAAlgorithm(p: KpProblem,
       if ((temp > minTemperature)  && stop.isNotSatisfied()) {
         if (iter == 1){
           // initialize solution
-          evOldSolution = initialSolution
+          evOldSolution = initialSolution(p)
         } else evOldSolution = old
         var temperature = temp
         // generate random new solution
