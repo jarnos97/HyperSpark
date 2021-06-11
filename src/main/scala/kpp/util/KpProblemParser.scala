@@ -5,7 +5,7 @@ import kpp.problem.KpProblem
 
 object KpProblemParser{
   def apply(fileName: String): KpProblem = {
-    val path = "src/main/resources/" + fileName + ".txt"
+    val path = "src/main/resources/" + fileName
     // Read capacity parameter
     val capacityString = Source.fromFile(path).getLines.find(_ => true).toArray
     val capacity = capacityString.map(x => x.toInt)

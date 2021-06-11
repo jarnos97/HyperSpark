@@ -14,7 +14,7 @@ object LocalAppKP{
     // start timer
     val t1 = System.nanoTime
 
-    val problem = KpProblem.fromResources(fileName = "KP_500_100000")
+    val problem = KpProblem.fromResources(fileName = "KP_500_100000.txt")
     println(problem)
     val algo = new SAAlgorithm(initT= 100.0, minT = 0.01, b = 0.0000005)
     val numOfAlgorithms = 4
