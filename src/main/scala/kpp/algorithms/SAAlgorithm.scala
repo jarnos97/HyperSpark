@@ -1,14 +1,14 @@
-package kp.algorithms
+package kpp.algorithms
 
 import it.polimi.hyperh.problem.Problem
 import it.polimi.hyperh.solution.EvaluatedSolution
 import it.polimi.hyperh.algorithms.Algorithm
 import it.polimi.hyperh.spark.{StoppingCondition, TimeExpired}
-import kp.problem.KpProblem
-import kp.solution.{KpEvaluatedSolution, KpSolution, NaiveKpEvaluatedSolution}
+import kpp.problem.KpProblem
+import kpp.solution.{KpEvaluatedSolution, KpSolution, NaiveKpEvaluatedSolution}
 import scala.util.Random
 import scala.annotation.tailrec
-import kp.util.Moves
+import kpp.util.Moves
 
 class SAAlgorithm() extends Algorithm {
   // Define default values

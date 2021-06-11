@@ -1,7 +1,7 @@
-package kp.solution
+package kpp.solution
 
 import it.polimi.hyperh.solution.Solution
-import kp.util.KpSolutionParser
+import kpp.util.KpSolutionParser
 
 /**
  * A solution is represented as a set of items that are included in the knapsack.

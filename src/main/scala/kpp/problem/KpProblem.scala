@@ -1,11 +1,11 @@
-package kp.problem
+package kpp.problem
 
 import it.polimi.hyperh.problem.Problem
 import it.polimi.hyperh.solution.Solution
 import it.polimi.hyperh.solution.EvaluatedSolution
-import kp.solution.KpSolution
-import kp.solution.KpEvaluatedSolution
-import kp.util.KpProblemParser
+import kpp.solution.KpSolution
+import kpp.solution.KpEvaluatedSolution
+import kpp.util.KpProblemParser
 
 @SerialVersionUID(100L)
 class KpProblem(val capacity: Int, val profits: Array[Int], val weights: Array[Int]) extends Problem {

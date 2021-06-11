@@ -1,4 +1,4 @@
-package kp.util
+package kpp.util
 
 import scala.util.Random
 

@@ -1,9 +1,9 @@
 package it.polimi.hyperh.apps
 
 import it.polimi.hyperh.spark.{Framework, FrameworkConf, SameSeeds, TimeExpired}
-import kp.problem.KpProblem
+import kpp.problem.KpProblem
 import it.polimi.hyperh.spark.MapReduceHandlerMaximization
-import kp.algorithms.SAAlgorithm
+import kpp.algorithms.SAAlgorithm
 
 /**
  * @author Jarno

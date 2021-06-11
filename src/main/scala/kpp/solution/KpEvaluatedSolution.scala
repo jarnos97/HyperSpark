@@ -1,8 +1,8 @@
-package kp.solution
+package kpp.solution
 
 import it.polimi.hyperh.solution.EvaluatedSolution
-import kp.problem.KpProblem
-import kp.util.KpEvaluatedSolutionParser
+import kpp.problem.KpProblem
+import kpp.util.KpEvaluatedSolutionParser
 import scala.io.Source
 import java.io.InputStream
 

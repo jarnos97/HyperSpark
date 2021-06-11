@@ -1,7 +1,7 @@
-package kp.util
+package kpp.util
 
 import scala.io.Source
-import kp.problem.KpProblem
+import kpp.problem.KpProblem
 
 object KpProblemParser{
   def apply(fileName: String): KpProblem = {

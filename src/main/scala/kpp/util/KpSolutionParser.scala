@@ -1,8 +1,8 @@
-package kp.util
+package kpp.util
 
 import scala.io.Source
-import kp.solution.KpSolution
-import kp.solution.KpEvaluatedSolution
+import kpp.solution.KpSolution
+import kpp.solution.KpEvaluatedSolution
 import scala.util.parsing.combinator.RegexParsers
 
 object KpSolutionParser{
