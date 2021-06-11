@@ -38,8 +38,7 @@ class SAAlgorithm() extends Algorithm {
   def randomSolution(numItems: Int): List[Int] = {
     val solution = Array.fill(numItems)(0)  // solution with only zeros
     val randomIndices = Seq.fill(1)(Random.nextInt(numItems))  // initial solution has only one item, as the coefficients can vary greatly
-    randomIndices.foreach(solution(_) = 1)  // todo: Changed above to length 1 - document!
-//    val result = solution.toList
+    randomIndices.foreach(solution(_) = 1)
     solution.toList
   }
 
@@ -68,8 +67,6 @@ class SAAlgorithm() extends Algorithm {
     def fitness(solution: List[Int]): KpEvaluatedSolution = p.evaluate(KpSolution(solution)).asInstanceOf[KpEvaluatedSolution]
 
     def checkConstraint(solution: List[Int]): Boolean = {
-//      val w: Int = weights(solution)
-//      val c: Int = p.capacity
       if (weights(solution) <= p.capacity) {
         true
       } else false
