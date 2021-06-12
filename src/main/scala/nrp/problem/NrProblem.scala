@@ -59,7 +59,7 @@ class NrProblem(val numCustomers: Int,
 //Problem Factory
 object NrProblem {
   // arg name - name of a resource in src/main/resources and src/test/resources
-  def fromResources(fileName: String): NrProblem =  {
-    NrProblemParser(fileName)
+  def fromResources(name: String): NrProblem =  {
+    NrProblemParser(name)
   }
 }

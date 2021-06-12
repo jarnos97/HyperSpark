@@ -26,7 +26,7 @@ class KpProblem(val capacity: Int, val profits: Array[Int], val weights: Array[I
 // Problem Factory
 object KpProblem{
   // arg name - name of a resource in src/main/resources and src/test/resources
-  def fromResources(fileName: String): KpProblem = {
-    KpProblemParser(fileName)
+  def fromResources(name: String): KpProblem = {
+    KpProblemParser(name)
   }
 }
