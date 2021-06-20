@@ -84,7 +84,7 @@ class SAAlgorithm() extends Algorithm {
         functionInt = Random.nextInt(List(1, 2, 3).length)  // produces random number 0, 1, or 2
         if (functionInt == 0) newSolution = Moves(random).addItem(solution) // all moves are equally likely to be chosen
         if (functionInt == 1) newSolution = Moves(random).swapItems(solution)
-        if (functionInt == 2) newSolution = Moves(random).removeItem(solution)  // TODO: made the probabilities equal here
+        if (functionInt == 2) newSolution = Moves(random).removeItem(solution)
       }
       // Check new solution
       if (checkConstraint(newSolution)) {

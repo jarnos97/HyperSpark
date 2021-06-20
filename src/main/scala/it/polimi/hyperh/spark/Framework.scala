@@ -84,7 +84,7 @@ object Framework {
 
     var bestSolution: EvaluatedSolution = null
 
-    var iterationSolutions: Array[AnyVal] = Array()  // todo: added this. Keep?
+    var iterationSolutions: Array[AnyVal] = Array()
 
     def iterloop(rdd: RDD[DistributedDatum], iterationNo: Int): EvaluatedSolution = {
       val bestIterSolution = rdd
@@ -94,10 +94,10 @@ object Framework {
       if(iterationNo == 1)  bestSolution = bestIterSolution
       else bestSolution = mrHandler.hyperReduce(bestIterSolution, bestSolution)
 
-      iterationSolutions :+= bestSolution.value  // todo: added this. Keep?
+      iterationSolutions :+= bestSolution.value
 
       if(iterationNo == maxIter) {//if it is last iteration don't update the rdd
-        println(iterationSolutions.mkString("Array(", ", ", ")"))  // todo: added this. Keep?
+        println(iterationSolutions.mkString("Array(", ", ", ")"))
         bestSolution
       } //return best solution found
       else {

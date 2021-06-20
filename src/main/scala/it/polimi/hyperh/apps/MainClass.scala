@@ -10,10 +10,10 @@ import kpp.algorithms.SAAlgorithm
  */
 object MainClass {
   def main(args: Array[String]): Unit = {
-    val problem = KpProblem.fromResources(name = "KP_10000_10000000.txt")
+    val problem = KpProblem.fromResources(name = "KP_100_10000000.txt")
     val algo = new SAAlgorithm(initT = 100.0, minT = 0.01, b = 0.0000005)
     val numOfAlgorithms = 64
-    val stopCond = new TimeExpired(300000)  //  300000 = 5 minutes
+    val stopCond = new TimeExpired(120000)  //  300000 = 5 minutes
     val randomSeed = 118337975
 
     val conf = new FrameworkConf()

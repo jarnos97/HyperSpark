@@ -46,8 +46,8 @@ class SAAlgorithm() extends Algorithm {
 
   def randomSolution(numCustomers: Int): List[Int]= {
     val solution = Array.fill(numCustomers)(0)  // solution with only zeros
-    val numInitialCustomers: Int = (0.1 * numCustomers * boundP).round.toInt // TODO: this the best percentage?
-    val randomIndices = Seq.fill(numInitialCustomers)(Random.nextInt(numCustomers))  // TODO: Changed this! from static 100.
+    val numInitialCustomers: Int = (0.1 * numCustomers * boundP).round.toInt
+    val randomIndices = Seq.fill(numInitialCustomers)(Random.nextInt(numCustomers))
     randomIndices.foreach(solution(_) = 1)
     solution.toList
   }

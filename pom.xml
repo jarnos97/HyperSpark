@@ -225,7 +225,6 @@
 								<filter>
 									<artifact>*:*</artifact>
 									<excludes>
-										<!-- <exclude>META-INF/maven/**</exclude>   Added this todo: remove or keep?-->
 										<exclude>META-INF/*.SF</exclude>
 										<exclude>META-INF/*.DSA</exclude>
 										<exclude>META-INF/*.RSA</exclude>
